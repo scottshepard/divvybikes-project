@@ -1,3 +1,5 @@
 __pycache__/
-config.yml
+*config.yml
 .DS_Store
+data/
+*.zip

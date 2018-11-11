@@ -2,7 +2,7 @@ CREATE DATABASE IF NOT EXISTS `divvybikes`;
 
 USE `divvybikes`;
 
-CREATE TABLE IF NOT EXISTS `stations` (	
+CREATE TABLE IF NOT EXISTS `stations` (
 	`id` int(11) NOT NULL,
 	`stationName` varchar(50) DEFAULT NULL,
 	`altitude` varchar(50) DEFAULT NULL,
@@ -24,4 +24,20 @@ CREATE TABLE IF NOT EXISTS `stations` (
 	`statusKey` int(11) DEFAULT NULL,
 	`statusValue` varchar(50) DEFAULT NULL,
 	`testStation` boolean DEFAULT NULL
+);
+
+CREATE TABLE IF NOT EXISTS `trips` (
+	`index` int(11) DEFAULT NULL,
+	`trip_id` int(11) DEFAULT NULL,
+	`starttime` DATETIME DEFAULT NULL,
+	`stoptime` DATETIME DEFAULT NULL,
+	`bike_id` int(11) DEFAULT NULL,
+	`tripduration` int(11) DEFAULT NULL,
+	`from_station_id` int(11) DEFAULT NULL,
+    `from_station_name` varchar(50) DEFAULT NULL,
+	`to_station_id` int(11) DEFAULT NULL,
+    `to_station_name` varchar(50) DEFAULT NULL,
+	`usertype` varchar(50) DEFAULT NULL,
+	`gender` varchar(50) DEFAULT NULL,
+	`birthyear` varchar(50) DEFAULT NULL
 );

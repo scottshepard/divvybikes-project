@@ -12,7 +12,7 @@ cnx = mysql.connector.connect(**config)
 cursor = cnx.cursor()
 
 for station in stations:
-    print(station)
+    #print(station)
 
     add_station = ("INSERT INTO stations"
                    "(id, stationName, availableDocks, totalDocks, latitude, \
