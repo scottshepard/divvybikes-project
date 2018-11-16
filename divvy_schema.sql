@@ -41,3 +41,32 @@ CREATE TABLE IF NOT EXISTS `trips` (
 	`gender` varchar(50) DEFAULT NULL,
 	`birthyear` varchar(50) DEFAULT NULL
 );
+
+CREATE TABLE IF NOT EXISTS `cta_stations` (
+	`stop_id` int(11) DEFAULT NULL,
+    `direction_id` varchar(50) DEFAULT NULL,
+    `stop_name` varchar(50) DEFAULT NULL,
+    `station_name` varchar(50) DEFAULT NULL,
+    `station_descriptive_name` varchar(100) DEFAULT NULL,
+    `station_id` int(11) DEFAULT NULL,
+    `ada` varchar(50) DEFAULT NULL,
+    `red` varchar(50) DEFAULT NULL,
+    `blue` varchar(50) DEFAULT NULL,
+    `green` varchar(50) DEFAULT NULL,
+    `brown` varchar(50) DEFAULT NULL,
+    `pink` varchar(50) DEFAULT NULL,
+    `purple` varchar(50) DEFAULT NULL,
+    `purple_express` varchar(50) DEFAULT NULL,
+    `orange` varchar(50) DEFAULT NULL,
+    `yellow` varchar(50) DEFAULT NULL,
+    `longitude` decimal(10,6) DEFAULT NULL,
+    `latitude` decimal(10,6) DEFAULT NULL
+);
+
+CREATE TABLE IF NOT EXISTS `cta_station_ridership` (
+	`station_id` int(11) DEFAULT NULL,
+    `stationname` varchar(50) DEFAULT NULL,
+	`date` DATETIME DEFAULT NULL,
+    `daytype` varchar(50) DEFAULT NULL,
+    `rides` int(11) DEFAULT NULL
+);
