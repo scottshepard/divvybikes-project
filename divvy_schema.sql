@@ -70,3 +70,9 @@ CREATE TABLE IF NOT EXISTS `cta_station_ridership` (
     `daytype` varchar(50) DEFAULT NULL,
     `rides` int(11) DEFAULT NULL
 );
+
+CREATE TABLE IF NOT EXISTS `station_distance` (
+	`cta_station_id` int(11) DEFAULT NULL,
+    `divvy_station_id` int(11) DEFAULT NULL,
+    `distance` decimal(10,6) DEFAULT NULL
+);
