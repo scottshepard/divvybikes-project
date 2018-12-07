@@ -78,15 +78,20 @@ def format_dataframe(df):
     df['stoptime']  = pd.to_datetime(df.stoptime)
     return(df)
 
-def write_trips_file_to_mysql(file_path, conn):
+def write_trips_file_to_mysql(file_path, eng):
     df = pd.read_csv(file_path)
     df = format_dataframe(df)
     # Iterate through chunks of 5000 rows or else the connection might time
     # out before the csv finishes uploading
+    cnx = engine.connect()
     for k,g in df.groupby(np.arange(len(df))//5000):
-        g.to_sql('trips', con=conn, schema='divvybikes', if_exists='append')
+        cnx.close()
+        print("Restablishing connection")
+        time.sleep(10)
+        cnx = engine.connect()
+        g.to_sql('trips', con=cnx, schema='divvybikes', if_exists='append', index=False)
 
-def write_all_trips_files_to_mysql(directory, conn):
+def write_all_trips_files_to_mysql(directory, eng):
     '''
     Look through a given directory and insert files matching the pattern
     Divvy_Trips_[year].csv to a MySQL database
@@ -97,13 +102,13 @@ def write_all_trips_files_to_mysql(directory, conn):
         dir_regex = re.search('.*_Trips_.*', file)
         if csv_regex is not None:
             print("Starting ", file)
-            write_trips_file_to_mysql(os.path.join(directory, file), conn)
+            write_trips_file_to_mysql(os.path.join(directory, file), eng)
             os.remove(os.path.join(directory, file))
             print("Finished ", file)
         elif dir_regex is not None:
             # Zip drives might contain multiple directories, each containing
             # their own csvs
-            write_all_trips_files_to_mysql(os.path.join('data', file), conn)
+            write_all_trips_files_to_mysql(os.path.join('data', file), eng)
 
 # Download all the data
 # After each download, insert the data into database from the config file
@@ -111,6 +116,6 @@ def write_all_trips_files_to_mysql(directory, conn):
 for url in past_data_urls:
     print('Downloading from ', url)
     download_divvy_zip(url)
-    write_all_trips_files_to_mysql('data', cnx)
+    write_all_trips_files_to_mysql('data', engine)
 
 cnx.close()

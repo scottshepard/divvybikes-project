@@ -2,8 +2,7 @@ import requests
 import mysql.connector
 import yaml
 
-r = requests.get('https://feeds.divvybikes.com/stations/stations.json')
-stations = r.json()['stationBeanList']
+
 
 with open("config.yml", 'r') as config_doc:
     config = yaml.safe_load(config_doc)
@@ -11,6 +10,8 @@ with open("config.yml", 'r') as config_doc:
 cnx = mysql.connector.connect(**config)
 cursor = cnx.cursor()
 
+r = requests.get('https://feeds.divvybikes.com/stations/stations.json')
+stations = r.json()['stationBeanList']
 for station in stations:
     #print(station)
 
