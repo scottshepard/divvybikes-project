@@ -1,0 +1,95 @@
+---
+title: "Final Project Rmarkdown"
+author: "Kevin Stutenberg"
+date: "December 5, 2018"
+output: html_document
+---
+
+
+We can connect to MySQL using the RMySQL package.
+# ```{r}
+# install.packages("RMySQL");
+# install.packages("dbplyr");
+# install.packages("dplyr");
+# install.packages("ggplot2");
+# install.packages("knitr");
+# ```
+
+Initialize libraries
+```{r, echo=FALSE}
+library(RMySQL);
+library(dplyr);
+library(ggplot2);
+library(DBI);
+library(tidyverse)
+```
+
+Load the data using the readr package, or alternatively enter the path to the data, and load it within r
+# ```{r}
+# datapath= "D:/Taxi_Trips_2016.csv"
+# 
+# Taxi_Trips <- read_csv("D:/Taxi_Trips_2016.csv", 
+# +     col_types = cols(`Dropoff Census Tract` = col_skip(), 
+# +         `Dropoff Centroid  Location` = col_skip(), 
+# +         `Pickup Census Tract` = col_skip(), 
+# +         `Pickup Centroid Location` = col_skip(), 
+# +         `Taxi ID` = col_skip(), `Trip ID` = col_skip()))
+# ```
+
+Filter the data to remove rows which have no values in Time stamp or location values
+```{r}
+Taxi_Trips_reduced<- na.omit(Taxi_Trips, cols=c("Trip Start Timestamp", "Trip End Timestamp", "Pickup Centroid Latitude",  "Pickup Centroid Longitude",  "Dropoff Centroid Latitude",  "Dropoff Centroid Longitude"));
+                             
+head(Taxi_Trips_reduced)
+```
+
+Create a new column with the id for verification
+```{r}
+Taxi_Trips_reduced$New_ID <- seq.int(nrow(Taxi_Trips_reduced))
+head(Taxi_Trips_reduced, 50)
+```
+
+
+Test Upload - When needed to test a small upload
+```{r}
+test<-head(Taxi_Trips_reduced,200)
+test
+```
+
+Set up the connection to AWS
+```{r, echo=FALSE}
+connection = dbConnect(MySQL(),user="msca", password="yessqlnosql", 
+                dbname="divvybikes", host="mscadbinstance.cxqhidondkea.us-east-1.rds.amazonaws.com");
+```
+
+Upload the new table 
+```{r}
+dbWriteTable(connection, name='Taxi_2015', value=Taxi_Trips_reduced)
+```
+
+```{r}
+myQuery <- "SELECT COUNT(*) FROM Taxi_2016_test;"
+dbGetQuery(connection, myQuery)
+```
+  
+
+Close active DB Connections
+```{r}
+dbGetQuery(connection, "show processlist")
+
+dbDisconnectAll <- function()
+{
+  ile <- length(dbListConnections(MySQL())  )
+  lapply( dbListConnections(MySQL()), function(x) dbDisconnect(x) )
+  cat(sprintf("%s connection(s) closed.\n", ile))
+}
+
+dbDisconnectAll()
+
+```
+
+
+
+
+
+
