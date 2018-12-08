@@ -1,7 +1,7 @@
 # DivvyBikes Database
 
 This repo contains scripts for creating a database used for the group assignment
-of MScA 31012: Data Engineering Platforms.
+of [MScA 31012: Data Engineering Platforms](https://github.com/scottshepard/divvybikes-project/blob/master/31012%20Data%20Engineering%20Project%20-%20Divvy%20Bikes.pdf).
 
 The assignment is to build a coherent analysis from publicly available data. We
 chose to use the Divvy and CTA data to find locations that would be good spots
