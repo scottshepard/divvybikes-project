@@ -1,0 +1,63 @@
+---
+title: "Divvy_Time_series_Analysis"
+author: "Scott,kevin,Dan,Neeraj"
+date: "12/7/2018"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Importing library
+
+
+```{r }
+library(bikedata)
+library(RSQLite)
+library(tseries)
+library(xts)
+library(forecast)
+library(ggplot2)
+library(TSA)
+```
+
+## Import and download divvy trips data
+
+
+```{r 1}
+dl_bikedata (city = 'chicago',dates = 2015:2017, data_dir = "/Users/neerajtadur/Documents/Data_Engineering_Project_Forecasting")
+bikedb <- file.path ("/Users/neerajtadur/Documents/Data_Engineering_Project_Forecasting", "bikedb.sqlite")
+
+store_bikedata (data_dir = "/Users/neerajtadur/Documents/Data_Engineering_Project_Forecasting", bikedb = bikedb, quiet = TRUE)
+index_bikedata_db (bikedb = bikedb)
+```
+
+```{r}
+# Examine daily number of trips
+time.series = bike_daily_trips(bikedb = bikedb)
+plot(time.series, type = "l")
+
+#Removing leap year for simplicity
+which(time.series$date == "2016/02/29")
+time.series = time.series[-c(425),]
+```
+
+Seasonality Plots
+```{r}
+divvy_xts <- xts(time.series$numtrips, order.by = time.series$date)
+divvy_ts <- ts(divvy_xts,start=c(2015,1),frequency = 365)
+fig2 <- ggseasonplot(divvy_ts) + ggtitle("Seasonal plot of Divvy daily ridership")
+fig2
+```
+
+```{r}
+#Summer plot for 2016
+plot(divvy_xts['2016-05-01/2016-08-30'])
+
+#Weakly seasonality plots
+divvy_w_ts <- ts(divvy_xts['2015-01-01/2017-12-31'],frequency = 7)
+fig3 <- ggsubseriesplot(divvy_w_ts) + ggtitle("Subseries plot for weekly seasonality")
+fig3
+```
+
